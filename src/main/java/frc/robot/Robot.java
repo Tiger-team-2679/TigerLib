@@ -13,11 +13,13 @@ public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
 
   private RobotContainer m_robotContainer;
-  private Logger logger = new Logger();
+  private Logger logger = new Logger("C:\\TigerTeam");
 
   @Override
   public void robotInit() {
     m_robotContainer = new RobotContainer();
+
+    // logger.setReplayLog("C:\\TigerTeam\\wpilog_41746eb24afa70b1.wpilog");
   }
 
   @Override

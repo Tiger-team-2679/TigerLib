@@ -31,21 +31,16 @@ public enum LoggableTypes {
    * Returns the type based on a standard string type for WPILOGs.
    */
   public static LoggableTypes fromWPILOGType(String type) {
-    if (wpilogTypes.contains(type)) {
-      return LoggableTypes.values()[wpilogTypes.indexOf(type)];
-    } else {
-      return null;
-    }
+    int index = wpilogTypes.indexOf(type);
+    return index != -1 ? LoggableTypes.values()[index] : null;
   }
 
   /**
    * Returns the type based on a standard string type for NT4.
    */
   public static LoggableTypes fromNT4Type(String type) {
-    if (nt4Types.contains(type)) {
-      return LoggableTypes.values()[nt4Types.indexOf(type)];
-    } else {
-      return null;
-    }
+    int index = nt4Types.indexOf(type);
+    return index != -1 ? LoggableTypes.values()[index] : null;
+
   }
 }

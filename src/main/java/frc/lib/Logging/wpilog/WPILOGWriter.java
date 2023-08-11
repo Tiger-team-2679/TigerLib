@@ -1,20 +1,26 @@
 package frc.lib.Logging.wpilog;
 
 import java.util.HashMap;
+import java.util.Map;
 
 import edu.wpi.first.util.datalog.DataLog;
 import frc.lib.Logging.LogTable;
 import frc.lib.Logging.LogValue;
+import frc.lib.Logging.LoggableTypes;
 
 public class WPILOGWriter {
-    private final HashMap<String, Integer> entriesIds = new HashMap<>();
+    private final Map<String, Integer> entriesIds = new HashMap<>();
     private final DataLog log;
+    private final int timestampEntryId;
 
     public WPILOGWriter(String dir) {
         log = new DataLog(dir);
+        timestampEntryId = log.start(WPILOGConstants.TIMESTAMP_KEY, LoggableTypes.Integer.asWPILOGType());
     }
 
-    public void writeTable(LogTable table, long timestamp) {
+    public void writeTable(LogTable table) {
+        log.appendInteger(timestampEntryId, table.getTimestamp(), table.getTimestamp());
+
         table.getAll().forEach((key, value) -> {
             Integer entryId = entriesIds.get(key);
             if (entryId == null) {
@@ -22,7 +28,7 @@ public class WPILOGWriter {
                 entriesIds.put(key, entryId);
             }
 
-            writeToEntry(entryId, value, timestamp);
+            writeToEntry(entryId, value, table.getTimestamp());
         });
     }
 

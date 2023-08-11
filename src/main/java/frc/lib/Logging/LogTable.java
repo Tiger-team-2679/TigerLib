@@ -2,9 +2,11 @@ package frc.lib.Logging;
 
 import java.util.HashMap;
 
+import edu.wpi.first.wpilibj.RobotController;
+
 public class LogTable {
     private final HashMap<String, LogValue> table = new HashMap<>();
-    private long timestamp;
+    private long timestamp = RobotController.getFPGATime();
 
     public void setTimestamp(long timestamp) {
         this.timestamp = timestamp;
