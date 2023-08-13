@@ -2,61 +2,55 @@ package frc.lib.Logging;
 
 public class LogValue {
     private final Object value;
-    private final LoggableTypes type;
+    private final LoggableType type;
+
+    private LogValue(Object value, LoggableType type) {
+        this.value = value;
+        this.type = type;
+    }
 
     public LogValue(byte[] value) {
-        type = LoggableTypes.Raw;
-        this.value = value;
+        this(value, LoggableType.RAW);
     }
 
     public LogValue(boolean value) {
-        type = LoggableTypes.Boolean;
-        this.value = value;
+        this(value, LoggableType.BOOLEAN);
     }
 
     public LogValue(long value) {
-        type = LoggableTypes.Integer;
-        this.value = value;
+        this(value, LoggableType.INTEGER);
     }
 
     public LogValue(float value) {
-        type = LoggableTypes.Float;
-        this.value = value;
+        this(value, LoggableType.FLOAT);
     }
 
     public LogValue(double value) {
-        type = LoggableTypes.Double;
-        this.value = value;
+        this(value, LoggableType.DOUBLE);
     }
 
     public LogValue(String value) {
-        type = LoggableTypes.String;
-        this.value = value != null ? value : "";
+        this(value != null ? value : "", LoggableType.STRING);
     }
 
     public LogValue(boolean[] value) {
-        type = LoggableTypes.BooleanArray;
-        this.value = value;
+        this(value, LoggableType.BOOLEAN_ARRAY);
     }
 
     public LogValue(long[] value) {
-        type = LoggableTypes.IntegerArray;
-        this.value = value;
+        this(value, LoggableType.INTEGER_ARRAY);
     }
 
     public LogValue(float[] value) {
-        type = LoggableTypes.FloatArray;
-        this.value = value;
+        this(value, LoggableType.FLOAT_ARRAY);
     }
 
     public LogValue(double[] value) {
-        type = LoggableTypes.DoubleArray;
-        this.value = value;
+        this(value, LoggableType.DOUBLE_ARRAY);
     }
 
     public LogValue(String[] value) {
-        type = LoggableTypes.StringArray;
-        this.value = value;
+        this(value, LoggableType.STRING_ARRAY);
     }
 
     public byte[] asRaw() {
@@ -103,7 +97,7 @@ public class LogValue {
         return (String[]) value;
     }
 
-    public LoggableTypes getType() {
+    public LoggableType getType() {
         return type;
     }
 }

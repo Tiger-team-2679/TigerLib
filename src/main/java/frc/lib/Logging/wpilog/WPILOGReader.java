@@ -10,7 +10,8 @@ import edu.wpi.first.util.datalog.DataLogReader;
 import edu.wpi.first.util.datalog.DataLogRecord;
 import edu.wpi.first.util.datalog.DataLogRecord.StartRecordData;
 import frc.lib.Logging.LogTable;
-import frc.lib.Logging.LoggableTypes;
+import frc.lib.Logging.LoggableType;
+import frc.lib.Logging.logvalues.types.*;
 
 public class WPILOGReader {
     private final DataLogReader logReader;
@@ -94,39 +95,39 @@ public class WPILOGReader {
         if (startData == null)
             return;
 
-        switch (LoggableTypes.fromWPILOGType(startData.type)) {
-            case Raw:
-                logTable.put(startData.name, record.getRaw());
+        switch (LoggableType.fromWPILOGType(startData.type)) {
+            case RAW:
+                logTable.put(startData.name, new RawLogValue(record.getRaw()));
                 break;
-            case Boolean:
-                logTable.put(startData.name, record.getBoolean());
+            case BOOLEAN:
+                logTable.put(startData.name, new BooleanLogValue(record.getBoolean()));
                 break;
-            case Integer:
-                logTable.put(startData.name, record.getInteger());
+            case INTEGER:
+                logTable.put(startData.name, new IntegerLogValue(record.getInteger()));
                 break;
-            case Float:
-                logTable.put(startData.name, record.getFloat());
+            case FLOAT:
+                logTable.put(startData.name, new FloatLogValue(record.getFloat()));
                 break;
-            case Double:
-                logTable.put(startData.name, record.getDouble());
+            case DOUBLE:
+                logTable.put(startData.name, new DoubleLogValue(record.getDouble()));
                 break;
-            case String:
-                logTable.put(startData.name, record.getString());
+            case STRING:
+                logTable.put(startData.name, new StringLogValue(record.getString()));
                 break;
-            case BooleanArray:
-                logTable.put(startData.name, record.getBooleanArray());
+            case BOOLEAN_ARRAY:
+                logTable.put(startData.name, new BooleanArrayLogValue(record.getBooleanArray()));
                 break;
-            case IntegerArray:
-                logTable.put(startData.name, record.getIntegerArray());
+            case INTEGER_ARRAY:
+                logTable.put(startData.name, new IntegerArrayLogValue(record.getIntegerArray()));
                 break;
-            case FloatArray:
-                logTable.put(startData.name, record.getFloatArray());
+            case FLOAT_ARRAY:
+                logTable.put(startData.name, new FloatArrayLogValue(record.getFloatArray()));
                 break;
-            case DoubleArray:
-                logTable.put(startData.name, record.getDoubleArray());
+            case DOUBLE_ARRAY:
+                logTable.put(startData.name, new DoubleArrayLogValue(record.getDoubleArray()));
                 break;
-            case StringArray:
-                logTable.put(startData.name, record.getStringArray());
+            case STRING_ARRAY:
+                logTable.put(startData.name, new StringArrayLogValue(record.getStringArray()));
                 break;
         }
     }

@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-    // logger.setReplayLog("C:\\TigerTeam\\wpilog_41746eb24afa70b1.wpilog");
+    logger.setReplayLog("C:\\TigerTeam\\wpilog_85cd91443095793c.wpilog");
   }
 
   @Override

@@ -4,20 +4,23 @@ import java.io.IOException;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
+import frc.lib.Logging.logvalues.types.BooleanLogValue;
+import frc.lib.Logging.logvalues.types.IntegerLogValue;
+import frc.lib.Logging.wpilog.WPILOGConstants;
 import frc.lib.Logging.wpilog.WPILOGReader;
 import frc.lib.Logging.wpilog.WPILOGWriter;
 
 public class Logger {
     private final WPILOGWriter wpilogWriter;
     private WPILOGReader wpilogReader = null;
-    LogTable table = new LogTable();
+    private final LogTable logTable = new LogTable();
     private long counter = 0;
 
     public Logger(String logFolder) {
         wpilogWriter = new WPILOGWriter(logFolder);
     }
 
-    public void setReplayLog(String filename){
+    public void setReplayLog(String filename) {
         try {
             wpilogReader = new WPILOGReader(filename);
         } catch (IOException e) {
@@ -27,14 +30,24 @@ public class Logger {
 
     public void periodic() {
         if (wpilogReader != null) {
-            boolean isSuccess = wpilogReader.updateTableToNextCycle(table);
+            boolean isSuccess = wpilogReader.updateTableToNextCycle(logTable);
             if (!isSuccess)
                 System.exit(0);
         } else {
-            table.setTimestamp(RobotController.getFPGATime());
-            table.put("hey", ++counter);
-            table.put("boool", counter % 2 == 0);
+            logTable.setTimestamp(RobotController.getFPGATime());
+            logTable.put("hey", new IntegerLogValue(++counter));
+            logTable.put("boool", new BooleanLogValue(counter % 2 == 0));
         }
-        wpilogWriter.writeTable(table);
+
+        writeTable();
+    }
+
+    public void writeTable() {
+        new IntegerLogValue(logTable.getTimestamp())
+                .log(WPILOGConstants.TIMESTAMP_KEY, wpilogWriter, logTable.getTimestamp());
+
+        logTable.getAll().forEach((key, logValue) -> {
+            logValue.log(key, wpilogWriter, logTable.getTimestamp());
+        });
     }
 }
