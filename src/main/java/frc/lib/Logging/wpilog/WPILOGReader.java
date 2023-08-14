@@ -1,6 +1,7 @@
 package frc.lib.Logging.wpilog;
 
 import java.io.IOException;
+import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
@@ -11,6 +12,7 @@ import edu.wpi.first.util.datalog.DataLogRecord;
 import edu.wpi.first.util.datalog.DataLogRecord.StartRecordData;
 import frc.lib.Logging.LogTable;
 import frc.lib.Logging.LoggableType;
+import frc.lib.Logging.logvalues.LogValue;
 import frc.lib.Logging.logvalues.types.*;
 
 public class WPILOGReader {
@@ -25,9 +27,10 @@ public class WPILOGReader {
         iterator = logReader.iterator();
 
         DataLogRecord timestampEntryStartRecord = iterateOnLogUntil(
-                record -> record.isStart() && record.getStartData().name.equals(WPILOGConstants.TIMESTAMP_KEY));
+                record -> record.isStart() && record.getStartData().name.equals(WPILOGConstants.CYCLE_TIMESTAMP_KEY)
+                        && record.getStartData().metadata == WPILOGConstants.ENTRY_METADATA);
         if (timestampEntryStartRecord == null)
-            throw new IOException("Log file doesn't have valid " + WPILOGConstants.TIMESTAMP_KEY + " entry.");
+            throw new IOException("Log file doesn't have valid " + WPILOGConstants.CYCLE_TIMESTAMP_KEY + " entry.");
         timestampEntryId = timestampEntryStartRecord.getStartData().entry;
 
         DataLogRecord firstTimestampRecord = iterateOnLogUntil(record -> record.getEntry() == timestampEntryId);
@@ -71,7 +74,7 @@ public class WPILOGReader {
                 handleControlRecord(record);
             } else if (record.getEntry() == timestampEntryId) {
                 return true;
-            } else {
+            } else if (record.getTimestamp() == table.getTimestamp()) {
                 updateField(table, record);
             }
             return false;
@@ -84,51 +87,59 @@ public class WPILOGReader {
     }
 
     private void handleControlRecord(DataLogRecord record) {
-        if (record.isStart()) {
+        if (record.isStart()) { // other types of control records doesn't metter.
             StartRecordData startData = record.getStartData();
-            entriesStartData.put(startData.entry, startData);
+            if (startData.metadata.contains("\"source\": \"TigerKit\""))
+                entriesStartData.put(startData.entry, startData);
+        }
+    }
+
+    private LogValue createLogValue(DataLogRecord record, LoggableType type) {
+        switch (type) {
+            case RAW:
+                return new RawLogValue(record.getRaw());
+            case BOOLEAN:
+                return new BooleanLogValue(record.getBoolean());
+            case INTEGER:
+                return new IntegerLogValue(record.getInteger());
+            case FLOAT:
+                return new FloatLogValue(record.getFloat());
+            case DOUBLE:
+                return new DoubleLogValue(record.getDouble());
+            case STRING:
+                return new StringLogValue(record.getString());
+            case BOOLEAN_ARRAY:
+                return new BooleanArrayLogValue(record.getBooleanArray());
+            case INTEGER_ARRAY:
+                return new IntegerArrayLogValue(record.getIntegerArray());
+            case FLOAT_ARRAY:
+                return new FloatArrayLogValue(record.getFloatArray());
+            case DOUBLE_ARRAY:
+                return new DoubleArrayLogValue(record.getDoubleArray());
+            case STRING_ARRAY:
+                return new StringArrayLogValue(record.getStringArray());
+            default:
+                return null;
         }
     }
 
     private void updateField(LogTable logTable, DataLogRecord record) {
-        StartRecordData startData = entriesStartData.get(record.getEntry());
-        if (startData == null)
-            return;
+        try {
+            StartRecordData startData = entriesStartData.get(record.getEntry());
 
-        switch (LoggableType.fromWPILOGType(startData.type)) {
-            case RAW:
-                logTable.put(startData.name, new RawLogValue(record.getRaw()));
-                break;
-            case BOOLEAN:
-                logTable.put(startData.name, new BooleanLogValue(record.getBoolean()));
-                break;
-            case INTEGER:
-                logTable.put(startData.name, new IntegerLogValue(record.getInteger()));
-                break;
-            case FLOAT:
-                logTable.put(startData.name, new FloatLogValue(record.getFloat()));
-                break;
-            case DOUBLE:
-                logTable.put(startData.name, new DoubleLogValue(record.getDouble()));
-                break;
-            case STRING:
-                logTable.put(startData.name, new StringLogValue(record.getString()));
-                break;
-            case BOOLEAN_ARRAY:
-                logTable.put(startData.name, new BooleanArrayLogValue(record.getBooleanArray()));
-                break;
-            case INTEGER_ARRAY:
-                logTable.put(startData.name, new IntegerArrayLogValue(record.getIntegerArray()));
-                break;
-            case FLOAT_ARRAY:
-                logTable.put(startData.name, new FloatArrayLogValue(record.getFloatArray()));
-                break;
-            case DOUBLE_ARRAY:
-                logTable.put(startData.name, new DoubleArrayLogValue(record.getDoubleArray()));
-                break;
-            case STRING_ARRAY:
-                logTable.put(startData.name, new StringArrayLogValue(record.getStringArray()));
-                break;
+            if (startData == null)
+                return; // does not throw because could be caused by record that wasn't written by
+                        // TigerLib.
+
+            LogValue logValue = createLogValue(record, LoggableType.fromWPILOGType(startData.type));
+            if (logValue == null)
+                throw new UnexpectedException("Did not create LogValue.");
+
+            logTable.put(startData.name, logValue);
+        } catch (UnexpectedException e) {
+            e.printStackTrace();
+        } catch (IllegalArgumentException e) {
+            e.printStackTrace();
         }
     }
 }

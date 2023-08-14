@@ -13,9 +13,6 @@ public enum LoggableType {
     private static final List<String> nt4Types = List.of("raw", "boolean", "int", "float", "double", "string",
             "boolean[]", "int[]", "float[]", "double[]", "string[]");
 
-    private LoggableType(){
-
-    }
     /**
      * Returns the standard string type for WPILOGs.
      */

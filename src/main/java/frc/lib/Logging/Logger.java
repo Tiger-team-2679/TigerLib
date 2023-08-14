@@ -43,9 +43,11 @@ public class Logger {
     }
 
     public void writeTable() {
+        // logging the cycle timestamp at the beggining of the cycle.
         new IntegerLogValue(logTable.getTimestamp())
-                .log(WPILOGConstants.TIMESTAMP_KEY, wpilogWriter, logTable.getTimestamp());
+                .log(WPILOGConstants.CYCLE_TIMESTAMP_KEY, wpilogWriter, logTable.getTimestamp());
 
+        // lot all the values from logTable
         logTable.getAll().forEach((key, logValue) -> {
             logValue.log(key, wpilogWriter, logTable.getTimestamp());
         });

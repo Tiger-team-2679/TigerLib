@@ -11,14 +11,14 @@ public class WPILOGWriter implements Writer {
     private final Map<String, Integer> entriesIds = new HashMap<>();
     private final DataLog log;
 
-    public WPILOGWriter(String dir) {
-        log = new DataLog(dir);
+    public WPILOGWriter(String directory) {
+        log = new DataLog(directory);
     }
 
-    public int getOrCreateEntryId(String key, LoggableType type){
+    public int getOrCreateEntryId(String key, LoggableType type, long timestamp){
         Integer entryId = entriesIds.get(key);
         if (entryId == null) {
-            entryId = log.start(key, type.asWPILOGType());
+            entryId = log.start(key, type.asWPILOGType(), WPILOGConstants.ENTRY_METADATA, timestamp);
             entriesIds.put(key, entryId);
         }
         return entryId;
@@ -26,58 +26,57 @@ public class WPILOGWriter implements Writer {
 
     @Override
     public void writeRaw(String key, byte[] value, long timestamp) {
-        log.appendRaw(getOrCreateEntryId(key, LoggableType.RAW), value, timestamp);        
+        log.appendRaw(getOrCreateEntryId(key, LoggableType.RAW, timestamp), value, timestamp);        
     }
 
     @Override
     public void writeBoolean(String key, boolean value, long timestamp) {
-        log.appendBoolean(getOrCreateEntryId(key, LoggableType.BOOLEAN), value, timestamp);                
+        log.appendBoolean(getOrCreateEntryId(key, LoggableType.BOOLEAN, timestamp), value, timestamp);                
     }
 
     @Override
     public void writeInteger(String key, long value, long timestamp) {
-        log.appendInteger(getOrCreateEntryId(key, LoggableType.INTEGER), value, timestamp);
+        log.appendInteger(getOrCreateEntryId(key, LoggableType.INTEGER, timestamp), value, timestamp);
     }
 
     @Override
     public void writeFloat(String key, float value, long timestamp) {
-        log.appendFloat(getOrCreateEntryId(key, LoggableType.FLOAT), value, timestamp);        
+        log.appendFloat(getOrCreateEntryId(key, LoggableType.FLOAT, timestamp), value, timestamp);        
     }
 
     @Override
     public void writeDouble(String key, double value, long timestamp) {
-        log.appendDouble(getOrCreateEntryId(key, LoggableType.DOUBLE), value, timestamp);
-        
+        log.appendDouble(getOrCreateEntryId(key, LoggableType.DOUBLE, timestamp), value, timestamp);
     }
 
     @Override
     public void writeString(String key, String value, long timestamp) {
-        log.appendString(getOrCreateEntryId(key, LoggableType.STRING), value, timestamp);
+        log.appendString(getOrCreateEntryId(key, LoggableType.STRING, timestamp), value, timestamp);
     }
 
     @Override
     public void writeBooleanArray(String key, boolean[] value, long timestamp) {
-        log.appendBooleanArray(getOrCreateEntryId(key, LoggableType.BOOLEAN_ARRAY), value, timestamp);
+        log.appendBooleanArray(getOrCreateEntryId(key, LoggableType.BOOLEAN_ARRAY, timestamp), value, timestamp);
     }
 
     @Override
     public void writeIntegerArray(String key, long[] value, long timestamp) {
-        log.appendIntegerArray(getOrCreateEntryId(key, LoggableType.INTEGER_ARRAY), value, timestamp);
+        log.appendIntegerArray(getOrCreateEntryId(key, LoggableType.INTEGER_ARRAY, timestamp), value, timestamp);
     }
 
     @Override
     public void writeFloatArray(String key, float[] value, long timestamp) {
-        log.appendFloatArray(getOrCreateEntryId(key, LoggableType.FLOAT_ARRAY), value, timestamp);
+        log.appendFloatArray(getOrCreateEntryId(key, LoggableType.FLOAT_ARRAY, timestamp), value, timestamp);
     }
 
     @Override
     public void writeDoubleArray(String key, double[] value, long timestamp) {
-        log.appendDoubleArray(getOrCreateEntryId(key, LoggableType.DOUBLE_ARRAY), value, timestamp);
+        log.appendDoubleArray(getOrCreateEntryId(key, LoggableType.DOUBLE_ARRAY, timestamp), value, timestamp);
     }
 
     @Override
     public void writeStringArray(String key, String[] value, long timestamp) {
-        log.appendStringArray(getOrCreateEntryId(key, LoggableType.STRING_ARRAY), value, timestamp);
+        log.appendStringArray(getOrCreateEntryId(key, LoggableType.STRING_ARRAY, timestamp), value, timestamp);
     }
 
 }
