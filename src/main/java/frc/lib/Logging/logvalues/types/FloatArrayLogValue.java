@@ -1,8 +1,10 @@
-package frc.lib.Logging.logvalues.types;
+package frc.lib.logging.logvalues.types;
 
-import frc.lib.Logging.LoggableType;
-import frc.lib.Logging.Writer;
-import frc.lib.Logging.logvalues.LogValue;
+import java.util.Arrays;
+
+import frc.lib.logging.DataReceiver;
+import frc.lib.logging.LoggableType;
+import frc.lib.logging.logvalues.LogValue;
 
 public class FloatArrayLogValue extends LogValue {
     private final float[] value;
@@ -13,7 +15,13 @@ public class FloatArrayLogValue extends LogValue {
     }
 
     @Override
-    public void log(String key, Writer writer, long timestamp) {
-        writer.writeFloatArray(key, value, timestamp);
+    public void log(DataReceiver writer, String key, long timestamp) {
+        writer.putFloatArray(key, value, timestamp);
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof FloatArrayLogValue
+                && Arrays.equals(this.value, ((FloatArrayLogValue) obj).value);
     }
 }

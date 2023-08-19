@@ -1,7 +1,7 @@
-package frc.lib.Logging.logvalues;
+package frc.lib.logging.logvalues;
 
-import frc.lib.Logging.LoggableType;
-import frc.lib.Logging.Writer;
+import frc.lib.logging.DataReceiver;
+import frc.lib.logging.LoggableType;
 
 public abstract class LogValue {
     private final LoggableType type;
@@ -14,5 +14,8 @@ public abstract class LogValue {
         return type;
     }
 
-    public abstract void log(String key, Writer writer, long timestamp);
+    public abstract void log(DataReceiver writer, String key, long timestamp);
+
+    @Override
+    public abstract boolean equals(Object obj);
 }

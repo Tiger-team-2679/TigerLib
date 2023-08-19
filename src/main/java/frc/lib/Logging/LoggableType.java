@@ -1,4 +1,4 @@
-package frc.lib.Logging;
+package frc.lib.logging;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package frc.lib.Logging.wpilog;
+package frc.lib.logging.wpilog;
 
 import java.io.IOException;
 import java.rmi.UnexpectedException;
@@ -10,12 +10,13 @@ import edu.wpi.first.util.datalog.DataLogIterator;
 import edu.wpi.first.util.datalog.DataLogReader;
 import edu.wpi.first.util.datalog.DataLogRecord;
 import edu.wpi.first.util.datalog.DataLogRecord.StartRecordData;
-import frc.lib.Logging.LogTable;
-import frc.lib.Logging.LoggableType;
-import frc.lib.Logging.logvalues.LogValue;
-import frc.lib.Logging.logvalues.types.*;
+import frc.lib.logging.LogTable;
+import frc.lib.logging.LoggableType;
+import frc.lib.logging.ReplaySource;
+import frc.lib.logging.logvalues.LogValue;
+import frc.lib.logging.logvalues.types.*;
 
-public class WPILOGReader {
+public class WPILOGReader implements ReplaySource {
     private final DataLogReader logReader;
     private final DataLogIterator iterator;
     private final Map<Integer, StartRecordData> entriesStartData = new HashMap<>();
