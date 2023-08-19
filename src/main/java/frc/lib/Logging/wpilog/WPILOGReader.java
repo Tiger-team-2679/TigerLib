@@ -29,7 +29,7 @@ public class WPILOGReader implements ReplaySource {
 
         DataLogRecord timestampEntryStartRecord = iterateOnLogUntil(
                 record -> record.isStart() && record.getStartData().name.equals(WPILOGConstants.CYCLE_TIMESTAMP_KEY)
-                        && record.getStartData().metadata == WPILOGConstants.ENTRY_METADATA);
+                        && record.getStartData().metadata.equals(WPILOGConstants.ENTRY_METADATA));
         if (timestampEntryStartRecord == null)
             throw new IOException("Log file doesn't have valid " + WPILOGConstants.CYCLE_TIMESTAMP_KEY + " entry.");
         timestampEntryId = timestampEntryStartRecord.getStartData().entry;

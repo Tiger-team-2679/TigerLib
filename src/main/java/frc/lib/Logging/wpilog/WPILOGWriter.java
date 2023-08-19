@@ -15,23 +15,20 @@ public class WPILOGWriter implements DataReceiver {
         log = new DataLog(directory);
     }
 
-    public int getOrCreateEntryId(String key, LoggableType type, long timestamp){
-        Integer entryId = entriesIds.get(key);
-        if (entryId == null) {
-            entryId = log.start(key, type.asWPILOGType(), WPILOGConstants.ENTRY_METADATA, timestamp);
-            entriesIds.put(key, entryId);
-        }
-        return entryId;
+    public int getOrCreateEntryId(String key, LoggableType type, long timestamp) {
+        return entriesIds.computeIfAbsent(
+                key,
+                k -> log.start(k, type.asWPILOGType(), WPILOGConstants.ENTRY_METADATA, timestamp));
     }
 
     @Override
     public void putRaw(String key, byte[] value, long timestamp) {
-        log.appendRaw(getOrCreateEntryId(key, LoggableType.RAW, timestamp), value, timestamp);        
+        log.appendRaw(getOrCreateEntryId(key, LoggableType.RAW, timestamp), value, timestamp);
     }
 
     @Override
     public void putBoolean(String key, boolean value, long timestamp) {
-        log.appendBoolean(getOrCreateEntryId(key, LoggableType.BOOLEAN, timestamp), value, timestamp);                
+        log.appendBoolean(getOrCreateEntryId(key, LoggableType.BOOLEAN, timestamp), value, timestamp);
     }
 
     @Override
@@ -41,7 +38,7 @@ public class WPILOGWriter implements DataReceiver {
 
     @Override
     public void putFloat(String key, float value, long timestamp) {
-        log.appendFloat(getOrCreateEntryId(key, LoggableType.FLOAT, timestamp), value, timestamp);        
+        log.appendFloat(getOrCreateEntryId(key, LoggableType.FLOAT, timestamp), value, timestamp);
     }
 
     @Override
