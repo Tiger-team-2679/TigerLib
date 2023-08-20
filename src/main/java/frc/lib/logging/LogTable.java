@@ -1,10 +1,10 @@
-package frc.lib.Logging;
+package frc.lib.logging;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.RobotController;
-import frc.lib.Logging.logvalues.LogValue;
+import frc.lib.logging.logvalues.LogValue;
 
 public class LogTable {
     private final Map<String, LogValue> table = new HashMap<>();
@@ -37,5 +37,16 @@ public class LogTable {
 
     public Map<String, LogValue> getAll() {
         return table;
+    }
+
+    public LogValue get(String key) {
+        return table.get(key);
+    }
+
+    public LogTable clone() {
+        LogTable newTable = new LogTable();
+        newTable.timestamp = this.timestamp;
+        newTable.table.putAll(this.table);
+        return newTable;
     }
 }

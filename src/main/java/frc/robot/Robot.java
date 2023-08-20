@@ -7,7 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.lib.Logging.Logger;
+import frc.lib.logging.Logger;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -19,7 +19,7 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-    logger.setReplayLog("C:\\TigerTeam\\wpilog_85cd91443095793c.wpilog");
+    logger.setReplayLog("C:\\TigerTeam\\wpilog_ac3c17cf0fd693d5.wpilog");
   }
 
   @Override

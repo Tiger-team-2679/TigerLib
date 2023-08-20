@@ -1,31 +1,36 @@
-package frc.lib.Logging;
+package frc.lib.logging;
 
 import java.io.IOException;
 
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.RobotController;
-import frc.lib.Logging.logvalues.types.BooleanLogValue;
-import frc.lib.Logging.logvalues.types.IntegerLogValue;
-import frc.lib.Logging.wpilog.WPILOGConstants;
-import frc.lib.Logging.wpilog.WPILOGReader;
-import frc.lib.Logging.wpilog.WPILOGWriter;
+import frc.lib.logging.logvalues.types.BooleanLogValue;
+import frc.lib.logging.logvalues.types.IntegerLogValue;
+import frc.lib.logging.networktables.NT4Publisher;
+import frc.lib.logging.wpilog.WPILOGReader;
+import frc.lib.logging.wpilog.WPILOGWriter;
 
 public class Logger {
-    private final WPILOGWriter wpilogWriter;
-    private WPILOGReader wpilogReader = null;
+    private ReplaySource wpilogReader = null;
     private final LogTable logTable = new LogTable();
+    private final DataReceiverManager dataReceiversManager = new DataReceiverManager();
     private long counter = 0;
 
     public Logger(String logFolder) {
-        wpilogWriter = new WPILOGWriter(logFolder);
+        dataReceiversManager.addReceiver(new WPILOGWriter(logFolder));
+        dataReceiversManager.addReceiver(new NT4Publisher());
     }
 
     public void setReplayLog(String filename) {
         try {
-            wpilogReader = new WPILOGReader(filename);
+            setReplayLog(new WPILOGReader(filename));
         } catch (IOException e) {
             DriverStation.reportError("Failed to open log file. (" + e.getMessage() + ")", e.getStackTrace());
         }
+    }
+
+    public void setReplayLog(ReplaySource replaySource) {
+        wpilogReader = replaySource;
     }
 
     public void periodic() {
@@ -37,19 +42,9 @@ public class Logger {
             logTable.setTimestamp(RobotController.getFPGATime());
             logTable.put("hey", new IntegerLogValue(++counter));
             logTable.put("boool", new BooleanLogValue(counter % 2 == 0));
+            logTable.put("boool2", new BooleanLogValue(counter % 4 == 0));
         }
 
-        writeTable();
-    }
-
-    public void writeTable() {
-        // logging the cycle timestamp at the beggining of the cycle.
-        new IntegerLogValue(logTable.getTimestamp())
-                .log(WPILOGConstants.CYCLE_TIMESTAMP_KEY, wpilogWriter, logTable.getTimestamp());
-
-        // lot all the values from logTable
-        logTable.getAll().forEach((key, logValue) -> {
-            logValue.log(key, wpilogWriter, logTable.getTimestamp());
-        });
+        dataReceiversManager.putTable(logTable.clone());
     }
 }

@@ -1,4 +1,4 @@
-package frc.lib.Logging.wpilog;
+package frc.lib.logging.wpilog;
 
 public class WPILOGConstants {
     public static final String CYCLE_TIMESTAMP_KEY = "cycleTimestamp";
