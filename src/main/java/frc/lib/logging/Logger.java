@@ -33,18 +33,19 @@ public class Logger {
         wpilogReader = replaySource;
     }
 
-    public void periodic() {
+    public void beforePeriodic() {
         if (wpilogReader != null) {
             boolean isSuccess = wpilogReader.updateTableToNextCycle(logTable);
             if (!isSuccess)
                 System.exit(0);
         } else {
-            logTable.setTimestamp(RobotController.getFPGATime());
-            logTable.put("hey", new IntegerLogValue(++counter));
-            logTable.put("boool", new BooleanLogValue(counter % 2 == 0));
-            logTable.put("boool2", new BooleanLogValue(counter % 4 == 0));
+            RealDataManager.updateTableToNextCycle(logTable);
         }
 
+        RealDataManager.updateFieldsFromTable(logTable);
+    }
+
+    public void afterPeriodic() {
         dataReceiversManager.putTable(logTable.clone());
     }
 }

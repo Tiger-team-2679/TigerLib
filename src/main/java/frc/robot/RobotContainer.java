@@ -4,12 +4,22 @@
 
 package frc.robot;
 
+import java.util.concurrent.ThreadLocalRandom;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.lib.logging.fields.types.IntegerField;
 
 public class RobotContainer {
+  IntegerField randomNumber = new IntegerField("randomNum", () -> ThreadLocalRandom.current().nextLong(100));
+
   public RobotContainer() {
     configureBindings();
+  }
+
+  public void periodic() {
+    if(randomNumber.get() % 30 == 3)
+      System.out.println(randomNumber.get());
   }
 
   private void configureBindings() {}

@@ -65,7 +65,7 @@ public class WPILOGReader implements ReplaySource {
      * considered between two cycle timestamp records.
      * 
      * @param table the log table to be updated.
-     * @return wheter could update the full cycle, or the log file ended.
+     * @return wheter could update the full cycle (or the log file ended).
      */
     public boolean updateTableToNextCycle(LogTable table) {
         table.setTimestamp(nextCycleTimestamp);

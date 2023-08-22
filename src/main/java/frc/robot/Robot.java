@@ -19,13 +19,15 @@ public class Robot extends TimedRobot {
   public void robotInit() {
     m_robotContainer = new RobotContainer();
 
-    logger.setReplayLog("C:\\TigerTeam\\wpilog_ac3c17cf0fd693d5.wpilog");
+    logger.setReplayLog("C:\\TigerTeam\\wpilog_177ed13a4b42cadf.wpilog");
   }
 
   @Override
   public void robotPeriodic() {
+    logger.beforePeriodic();
     CommandScheduler.getInstance().run();
-    logger.periodic();
+    m_robotContainer.periodic();
+    logger.afterPeriodic();
   }
 
   @Override

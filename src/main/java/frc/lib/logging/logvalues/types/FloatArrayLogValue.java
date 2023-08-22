@@ -15,7 +15,7 @@ public class FloatArrayLogValue extends LogValue {
     }
 
     @Override
-    public void log(DataReceiver writer, String key, long timestamp) {
+    public void putInDataReceiver(DataReceiver writer, String key, long timestamp) {
         writer.putFloatArray(key, value, timestamp);
     }
 

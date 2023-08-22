@@ -19,10 +19,10 @@ public class DataReceiverManager {
     public void putTable(LogTable logTable) {
         IntegerLogValue cycleTimestampLogValue = new IntegerLogValue(logTable.getTimestamp());
         for (DataReceiver dataReceiver : dataReceivers) {
-            cycleTimestampLogValue.log(dataReceiver, WPILOGConstants.CYCLE_TIMESTAMP_KEY, logTable.getTimestamp());
+            cycleTimestampLogValue.putInDataReceiver(dataReceiver, WPILOGConstants.CYCLE_TIMESTAMP_KEY, logTable.getTimestamp());
             logTable.getAll().forEach((key, logValue) -> {
                 if (prevLogTable == null || !logValue.equals(prevLogTable.get(key)))
-                    logValue.log(dataReceiver, key, logTable.getTimestamp());
+                    logValue.putInDataReceiver(dataReceiver, key, logTable.getTimestamp());
             });
         }
 

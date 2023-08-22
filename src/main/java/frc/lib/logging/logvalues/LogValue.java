@@ -14,7 +14,7 @@ public abstract class LogValue {
         return type;
     }
 
-    public abstract void log(DataReceiver writer, String key, long timestamp);
+    public abstract void putInDataReceiver(DataReceiver dataReceiver, String key, long timestamp);
 
     @Override
     public abstract boolean equals(Object obj);
