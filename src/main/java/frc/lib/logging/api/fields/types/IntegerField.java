@@ -1,12 +1,12 @@
-package frc.lib.logging.fields.types;
+package frc.lib.logging.api.fields.types;
 
 import java.util.function.LongSupplier;
 
-import frc.lib.logging.fields.RealDataField;
+import frc.lib.logging.api.fields.RealDataField;
 import frc.lib.logging.logvalues.LogValue;
 import frc.lib.logging.logvalues.types.IntegerLogValue;
 
-public class IntegerField extends RealDataField {
+public class IntegerField extends RealDataField implements LongSupplier {
     private final LongSupplier valueSupplier;
     private long value = 0; 
 
@@ -25,7 +25,8 @@ public class IntegerField extends RealDataField {
         this.value = value;
     }
 
-    public long get() {
+    @Override
+    public long getAsLong() {
         return value;
     }
 }

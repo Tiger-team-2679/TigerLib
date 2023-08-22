@@ -1,7 +1,4 @@
-package frc.lib.logging.fields;
-
-import java.util.function.IntSupplier;
-import java.util.function.LongSupplier;
+package frc.lib.logging.api.fields;
 
 import frc.lib.logging.DataReceiver;
 import frc.lib.logging.RealDataManager;

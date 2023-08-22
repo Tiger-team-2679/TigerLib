@@ -1,12 +1,13 @@
 package frc.lib.logging;
 
-import java.util.ArrayList;
+import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.lib.logging.fields.RealDataField;
+import frc.lib.logging.api.fields.RealDataField;
 import frc.lib.logging.logvalues.LogValue;
+import frc.lib.logging.wpilog.WPILOGConstants;
 
 public class RealDataManager {
     private static final Map<String, RealDataField> dataFields = new HashMap<>();
@@ -19,16 +20,22 @@ public class RealDataManager {
 
     public static void updateFieldsFromTable(LogTable table) {
         dataFields.forEach((key, realDataField) -> {
-            LogValue logValue = table.get(key);
-            if(logValue == null)
-                DriverStation.reportError("the value for field " + key + " was not provided.", new Exception().getStackTrace()); 
-            logValue.putInDataReceiver(realDataField, key, table.getTimestamp());
+            try{
+                LogValue logValue = table.get(key);
+                if(logValue == null)
+                    throw new UnexpectedException("the value for field " + key + " was not provided.");
+                logValue.putInDataReceiver(realDataField, key, table.getTimestamp());    
+            } catch(UnexpectedException e){
+                e.printStackTrace();
+            }
         });
     }
 
     public static void registerDataField(String key, RealDataField dataField) {
         if (dataFields.containsKey(key))
             throw new IllegalArgumentException("can't register field, key already exists: " + key);
+        if(key.equals(WPILOGConstants.CYCLE_TIMESTAMP_KEY))
+            throw new IllegalArgumentException("can't register field with the cycle timestamp key.");
         
         dataFields.put(key, dataField);
     }

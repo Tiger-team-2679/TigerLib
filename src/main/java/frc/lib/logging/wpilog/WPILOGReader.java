@@ -90,7 +90,7 @@ public class WPILOGReader implements ReplaySource {
     private void handleControlRecord(DataLogRecord record) {
         if (record.isStart()) { // other types of control records doesn't metter.
             StartRecordData startData = record.getStartData();
-            if (startData.metadata.contains("\"source\": \"TigerKit\""))
+            if (startData.metadata.equals(WPILOGConstants.ENTRY_METADATA))
                 entriesStartData.put(startData.entry, startData);
         }
     }
