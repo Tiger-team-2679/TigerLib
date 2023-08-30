@@ -3,21 +3,17 @@ package frc.lib.logging;
 import java.io.IOException;
 
 import edu.wpi.first.wpilibj.DriverStation;
-import frc.lib.logging.networktables.NT4Publisher;
+import frc.lib.logging.logvalues.LogValue;
 import frc.lib.logging.wpilog.WPILOGReader;
-import frc.lib.logging.wpilog.WPILOGWriter;
 
 public class Logger {
-    private ReplaySource wpilogReader = null;
-    private final LogTable logTable = new LogTable();
-    private final DataReceiverManager dataReceiversManager = new DataReceiverManager();
+    private static ReplaySource replaySource = null;
+    private static final LogTable logTable = new LogTable();
+    private static final DataReceiverManager dataReceiversManager = new DataReceiverManager();
 
-    public Logger(String logFolder) {
-        dataReceiversManager.addReceiver(new WPILOGWriter(logFolder));
-        dataReceiversManager.addReceiver(new NT4Publisher());
-    }
+    private Logger() {}
 
-    public void setReplayLog(String filename) {
+    public static void setReplayLog(String filename) {
         try {
             setReplayLog(new WPILOGReader(filename));
         } catch (IOException e) {
@@ -25,13 +21,17 @@ public class Logger {
         }
     }
 
-    public void setReplayLog(ReplaySource replaySource) {
-        wpilogReader = replaySource;
+    public static void setReplayLog(ReplaySource replaySource) {
+        Logger.replaySource = replaySource;
     }
 
-    public void beforePeriodic() {
-        if (wpilogReader != null) {
-            boolean isSuccess = wpilogReader.updateTableToNextCycle(logTable);
+    public static void addReceiver(DataReceiver dataReceiver) {
+        dataReceiversManager.addReceiver(dataReceiver);
+    }
+
+    public static void beforePeriodic() {
+        if (replaySource != null) {
+            boolean isSuccess = replaySource.updateTableToNextCycle(logTable);
             if (!isSuccess)
                 System.exit(0);
         } else {
@@ -41,7 +41,11 @@ public class Logger {
         RealDataManager.updateFieldsFromTable(logTable);
     }
 
-    public void afterPeriodic() {
+    public static void putLogValue(String key, LogValue value) {
+        logTable.put(key, value);
+    }
+
+    public static void afterPeriodic() {
         dataReceiversManager.putTable(logTable.clone());
     }
 }

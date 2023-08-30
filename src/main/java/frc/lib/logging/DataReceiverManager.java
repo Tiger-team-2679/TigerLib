@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import frc.lib.logging.logvalues.types.IntegerLogValue;
-import frc.lib.logging.wpilog.WPILOGConstants;
 
 public class DataReceiverManager {
     private final List<DataReceiver> dataReceivers = new ArrayList<>();
@@ -19,7 +18,7 @@ public class DataReceiverManager {
     public void putTable(LogTable logTable) {
         IntegerLogValue cycleTimestampLogValue = new IntegerLogValue(logTable.getTimestamp());
         for (DataReceiver dataReceiver : dataReceivers) {
-            cycleTimestampLogValue.putInDataReceiver(dataReceiver, WPILOGConstants.CYCLE_TIMESTAMP_KEY, logTable.getTimestamp());
+            cycleTimestampLogValue.putInDataReceiver(dataReceiver, LogConstants.CYCLE_TIMESTAMP_KEY, logTable.getTimestamp());
             logTable.getAll().forEach((key, logValue) -> {
                 if (prevLogTable == null || !logValue.equals(prevLogTable.get(key)))
                     logValue.putInDataReceiver(dataReceiver, key, logTable.getTimestamp());

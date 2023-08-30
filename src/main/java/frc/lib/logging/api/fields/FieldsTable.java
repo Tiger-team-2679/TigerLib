@@ -6,17 +6,9 @@ import java.util.function.LongSupplier;
 import java.util.function.Supplier;
 
 import edu.wpi.first.util.function.FloatSupplier;
-import frc.lib.logging.api.fields.types.BooleanArrayField;
-import frc.lib.logging.api.fields.types.BooleanField;
-import frc.lib.logging.api.fields.types.DoubleArrayField;
-import frc.lib.logging.api.fields.types.DoubleField;
-import frc.lib.logging.api.fields.types.FloatArrayField;
-import frc.lib.logging.api.fields.types.FloatField;
-import frc.lib.logging.api.fields.types.IntegerArrayField;
-import frc.lib.logging.api.fields.types.IntegerField;
-import frc.lib.logging.api.fields.types.RawField;
-import frc.lib.logging.api.fields.types.StringArrayField;
-import frc.lib.logging.api.fields.types.StringField;
+import frc.lib.logging.Logger;
+import frc.lib.logging.api.fields.types.*;
+import frc.lib.logging.logvalues.types.*;
 
 public class FieldsTable {
     private final String prefix;
@@ -37,7 +29,7 @@ public class FieldsTable {
         return new BooleanField(prefix + name, valueSupplier);
     }
 
-    public LongSupplier addInteger(String name, LongSupplier valueSupplier){
+    public LongSupplier addInteger(String name, LongSupplier valueSupplier) {
         return new IntegerField(prefix + name, valueSupplier);
     }
 
@@ -71,5 +63,49 @@ public class FieldsTable {
 
     public Supplier<String[]> addStringArray(String name, Supplier<String[]> valueSupplier) {
         return new StringArrayField(prefix + name, valueSupplier);
+    }
+
+    public void recordValue(String name, byte[] value) {
+        Logger.putLogValue(prefix + name, new RawLogValue(value));
+    }
+
+    public void recordValue(String name, boolean value) {
+        Logger.putLogValue(prefix + name, new BooleanLogValue(value));
+    }
+
+    public void recordValue(String name, long value) {
+        Logger.putLogValue(prefix + name, new IntegerLogValue(value));
+    }
+
+    public void recordValue(String name, float value) {
+        Logger.putLogValue(prefix + name, new FloatLogValue(value));
+    }
+
+    public void recordValue(String name, double value) {
+        Logger.putLogValue(prefix + name, new DoubleLogValue(value));
+    }
+
+    public void recordValue(String name, String value) {
+        Logger.putLogValue(prefix + name, new StringLogValue(value));
+    }
+
+    public void recordValue(String name, boolean[] value) {
+        Logger.putLogValue(prefix + name, new BooleanArrayLogValue(value));
+    }
+
+    public void recordValue(String name, long[] value) {
+        Logger.putLogValue(prefix + name, new IntegerArrayLogValue(value));
+    }
+
+    public void recordValue(String name, float[] value) {
+        Logger.putLogValue(prefix + name, new FloatArrayLogValue(value));
+    }
+
+    public void recordValue(String name, double[] value) {
+        Logger.putLogValue(prefix + name, new DoubleArrayLogValue(value));
+    }
+
+    public void recordValue(String name, String[] value) {
+        Logger.putLogValue(prefix + name, new StringArrayLogValue(value));
     }
 }

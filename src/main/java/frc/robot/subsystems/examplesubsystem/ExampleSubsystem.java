@@ -1,11 +1,13 @@
 package frc.robot.subsystems.examplesubsystem;
 
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.lib.logging.api.fields.FieldsTable;
 import frc.robot.subsystems.examplesubsystem.io.ExampleSubsystemIO;
 import frc.robot.subsystems.examplesubsystem.io.ExampleSubsystemIOCounter;
 
 public class ExampleSubsystem extends SubsystemBase {
-    private final ExampleSubsystemIO io = new ExampleSubsystemIOCounter();
+    public final FieldsTable fieldsTable = new FieldsTable("ExampleSubsystem");
+    private final ExampleSubsystemIO io = new ExampleSubsystemIOCounter(fieldsTable);
 
     public ExampleSubsystem() {
     }
@@ -13,5 +15,7 @@ public class ExampleSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         System.out.println(io.someValue.getAsLong());
+
+        fieldsTable.recordValue("multiplied", io.someValue.getAsLong() * 2);
     }
 }

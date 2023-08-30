@@ -10,6 +10,7 @@ import edu.wpi.first.util.datalog.DataLogIterator;
 import edu.wpi.first.util.datalog.DataLogReader;
 import edu.wpi.first.util.datalog.DataLogRecord;
 import edu.wpi.first.util.datalog.DataLogRecord.StartRecordData;
+import frc.lib.logging.LogConstants;
 import frc.lib.logging.LogTable;
 import frc.lib.logging.LoggableType;
 import frc.lib.logging.ReplaySource;
@@ -28,10 +29,10 @@ public class WPILOGReader implements ReplaySource {
         iterator = logReader.iterator();
 
         DataLogRecord timestampEntryStartRecord = iterateOnLogUntil(
-                record -> record.isStart() && record.getStartData().name.equals(WPILOGConstants.CYCLE_TIMESTAMP_KEY)
-                        && record.getStartData().metadata.equals(WPILOGConstants.ENTRY_METADATA));
+                record -> record.isStart() && record.getStartData().name.equals(LogConstants.CYCLE_TIMESTAMP_KEY)
+                        && record.getStartData().metadata.equals(LogConstants.ENTRY_METADATA));
         if (timestampEntryStartRecord == null)
-            throw new IOException("Log file doesn't have valid " + WPILOGConstants.CYCLE_TIMESTAMP_KEY + " entry.");
+            throw new IOException("Log file doesn't have valid " + LogConstants.CYCLE_TIMESTAMP_KEY + " entry.");
         timestampEntryId = timestampEntryStartRecord.getStartData().entry;
 
         DataLogRecord firstTimestampRecord = iterateOnLogUntil(record -> record.getEntry() == timestampEntryId);
@@ -90,7 +91,7 @@ public class WPILOGReader implements ReplaySource {
     private void handleControlRecord(DataLogRecord record) {
         if (record.isStart()) { // other types of control records doesn't metter.
             StartRecordData startData = record.getStartData();
-            if (startData.metadata.equals(WPILOGConstants.ENTRY_METADATA))
+            if (startData.metadata.equals(LogConstants.ENTRY_METADATA))
                 entriesStartData.put(startData.entry, startData);
         }
     }

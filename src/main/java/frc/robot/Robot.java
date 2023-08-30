@@ -8,25 +8,27 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.logging.Logger;
+import frc.lib.logging.networktables.NT4Publisher;
+import frc.lib.logging.wpilog.WPILOGWriter;
 
 public class Robot extends TimedRobot {
     private Command m_autonomousCommand;
 
     private RobotContainer m_robotContainer;
-    private Logger logger = new Logger("C:\\TigerTeam");
 
     @Override
     public void robotInit() {
         m_robotContainer = new RobotContainer();
-
-        // logger.setReplayLog("C:\\TigerTeam\\wpilog_177ed13a4b42cadf.wpilog");
+        Logger.addReceiver(new WPILOGWriter("C:\\TigerTeam\\tmpLogs"));
+        Logger.addReceiver(new NT4Publisher());
+        // Logger.setReplayLog("C:\\TigerTeam\\wpilog_177ed13a4b42cadf.wpilog");
     }
 
     @Override
     public void robotPeriodic() {
-        logger.beforePeriodic();
+        Logger.beforePeriodic();
         CommandScheduler.getInstance().run();
-        logger.afterPeriodic();
+        Logger.afterPeriodic();
     }
 
     @Override

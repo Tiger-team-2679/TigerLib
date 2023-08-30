@@ -4,6 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import edu.wpi.first.util.datalog.DataLog;
+import frc.lib.logging.LogConstants;
 import frc.lib.logging.DataReceiver;
 import frc.lib.logging.LoggableType;
 
@@ -18,7 +19,7 @@ public class WPILOGWriter implements DataReceiver {
     public int getOrCreateEntryId(String key, LoggableType type, long timestamp) {
         return entriesIds.computeIfAbsent(
                 key,
-                k -> log.start(k, type.asWPILOGType(), WPILOGConstants.ENTRY_METADATA, timestamp));
+                k -> log.start(k, type.asWPILOGType(), LogConstants.ENTRY_METADATA, timestamp));
     }
 
     @Override
