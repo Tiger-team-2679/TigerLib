@@ -4,11 +4,11 @@ import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.Map;
 
-import frc.lib.logging.api.fields.RealDataField;
+import frc.lib.logging.api.fields.DataField;
 import frc.lib.logging.logvalues.LogValue;
 
-public class RealDataManager {
-    private static final Map<String, RealDataField> dataFields = new HashMap<>();
+public class RealFieldsManager {
+    private static final Map<String, DataField> dataFields = new HashMap<>();
 
     public static void updateTableToNextCycle(LogTable table) {
         dataFields.forEach((key, realDataField) -> {
@@ -29,12 +29,16 @@ public class RealDataManager {
         });
     }
 
-    public static void registerDataField(String key, RealDataField dataField) {
+    public static void registerField(String key, DataField dataField) {
         if (dataFields.containsKey(key))
             throw new IllegalArgumentException("can't register field, key already exists: " + key);
         if(key.equals(LogConstants.CYCLE_TIMESTAMP_KEY))
             throw new IllegalArgumentException("can't register field with the cycle timestamp key.");
         
         dataFields.put(key, dataField);
+    }
+
+    public static CycleReceiverOptions[] getFieldCycleReceiversOptions(String key) {
+        return dataFields.get(key).getCycleReceiversOptions();
     }
 }

@@ -4,9 +4,10 @@ import java.util.function.LongSupplier;
 
 import frc.lib.logging.api.IOBase;
 import frc.lib.logging.api.fields.FieldsTable;
+import frc.lib.logging.networktables.NT4Options;
 
 public abstract class ExampleSubsystemIO extends IOBase {
-    public final LongSupplier someValue = fields.addInteger("someValue", this::getSomeValue);
+    public final LongSupplier someValue = fields.addInteger("someValue", this::getSomeValue, new NT4Options(true));
 
     protected ExampleSubsystemIO(FieldsTable fieldsTable) {
         super(fieldsTable);

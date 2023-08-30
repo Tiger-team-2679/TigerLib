@@ -2,6 +2,7 @@ package frc.lib.logging.logvalues.types;
 
 import java.util.Arrays;
 
+import frc.lib.logging.CycleReceiverOptions;
 import frc.lib.logging.DataReceiver;
 import frc.lib.logging.LoggableType;
 import frc.lib.logging.logvalues.LogValue;
@@ -9,8 +10,8 @@ import frc.lib.logging.logvalues.LogValue;
 public class IntegerArrayLogValue extends LogValue {
     private final long[] value;
 
-    public IntegerArrayLogValue(long[] value) {
-        super(LoggableType.INTEGER_ARRAY);
+    public IntegerArrayLogValue(long[] value, CycleReceiverOptions[] cycleReceiversOptions) {
+        super(LoggableType.INTEGER_ARRAY, cycleReceiversOptions);
         this.value = value;
     }
 

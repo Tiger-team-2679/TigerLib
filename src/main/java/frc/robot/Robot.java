@@ -8,7 +8,9 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.lib.logging.Logger;
+import frc.lib.logging.networktables.NT4Options;
 import frc.lib.logging.networktables.NT4Publisher;
+import frc.lib.logging.wpilog.WPILOGOptions;
 import frc.lib.logging.wpilog.WPILOGWriter;
 
 public class Robot extends TimedRobot {
@@ -19,8 +21,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         m_robotContainer = new RobotContainer();
-        Logger.addReceiver(new WPILOGWriter("C:\\TigerTeam\\tmpLogs"));
-        Logger.addReceiver(new NT4Publisher());
+        Logger.addCycleReceiver(new WPILOGWriter("C:\\TigerTeam\\tmpLogs"), new WPILOGOptions(true));
+        Logger.addCycleReceiver(new NT4Publisher(), new NT4Options(false));
         // Logger.setReplayLog("C:\\TigerTeam\\wpilog_177ed13a4b42cadf.wpilog");
     }
 

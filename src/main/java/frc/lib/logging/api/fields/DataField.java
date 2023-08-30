@@ -1,12 +1,20 @@
 package frc.lib.logging.api.fields;
 
+import frc.lib.logging.CycleReceiverOptions;
 import frc.lib.logging.DataReceiver;
-import frc.lib.logging.RealDataManager;
+import frc.lib.logging.RealFieldsManager;
 import frc.lib.logging.logvalues.LogValue;
 
-public abstract class RealDataField implements DataReceiver {
-    public RealDataField(String key) {
-        RealDataManager.registerDataField(key, this);
+public abstract class DataField implements DataReceiver {
+    private final CycleReceiverOptions[] cycleReceiversOptions;
+
+    public DataField(String key, CycleReceiverOptions[] cycleReceiversOptions) {
+        this.cycleReceiversOptions = cycleReceiversOptions;
+        RealFieldsManager.registerField(key, this);
+    }
+
+    public CycleReceiverOptions[] getCycleReceiversOptions() {
+        return cycleReceiversOptions;
     }
 
     public abstract LogValue getLogValue();

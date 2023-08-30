@@ -1,5 +1,6 @@
 package frc.lib.logging.logvalues.types;
 
+import frc.lib.logging.CycleReceiverOptions;
 import frc.lib.logging.DataReceiver;
 import frc.lib.logging.LoggableType;
 import frc.lib.logging.logvalues.LogValue;
@@ -7,8 +8,8 @@ import frc.lib.logging.logvalues.LogValue;
 public class FloatLogValue extends LogValue {
     private final float value;
 
-    public FloatLogValue(float value) {
-        super(LoggableType.FLOAT);
+    public FloatLogValue(float value, CycleReceiverOptions[] cycleReceiversOptions) {
+        super(LoggableType.FLOAT, cycleReceiversOptions);
         this.value = value;
     }
 

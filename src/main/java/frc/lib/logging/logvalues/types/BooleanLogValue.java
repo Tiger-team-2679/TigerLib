@@ -1,5 +1,6 @@
 package frc.lib.logging.logvalues.types;
 
+import frc.lib.logging.CycleReceiverOptions;
 import frc.lib.logging.DataReceiver;
 import frc.lib.logging.LoggableType;
 import frc.lib.logging.logvalues.LogValue;
@@ -7,8 +8,8 @@ import frc.lib.logging.logvalues.LogValue;
 public class BooleanLogValue extends LogValue {
     private final boolean value;
 
-    public BooleanLogValue(boolean value) {
-        super(LoggableType.BOOLEAN);
+    public BooleanLogValue(boolean value, CycleReceiverOptions[] cycleReceiversOptions) {
+        super(LoggableType.BOOLEAN, cycleReceiversOptions);
         this.value = value;
     }
 

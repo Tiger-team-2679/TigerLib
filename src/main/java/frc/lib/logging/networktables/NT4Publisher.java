@@ -5,10 +5,11 @@ import java.util.Map;
 
 import edu.wpi.first.networktables.GenericPublisher;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import frc.lib.logging.DataReceiver;
+import frc.lib.logging.CycleReceiver;
 import frc.lib.logging.LoggableType;
 
-public class NT4Publisher implements DataReceiver {
+public class NT4Publisher implements CycleReceiver {
+    public static final String key = "NT4";
     private final NetworkTableInstance networkTableInstance = NetworkTableInstance.getDefault();
     private final Map<String, GenericPublisher> publishers = new HashMap<>();
 
@@ -71,5 +72,10 @@ public class NT4Publisher implements DataReceiver {
     @Override
     public void putStringArray(String key, String[] value, long timestamp) {
         getOrCreateEntry(key, LoggableType.STRING_ARRAY).setStringArray(value);
+    }
+
+    @Override
+    public String getKey() {
+        return key;
     }
 }

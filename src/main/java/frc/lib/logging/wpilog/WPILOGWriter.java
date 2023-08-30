@@ -5,13 +5,14 @@ import java.util.Map;
 
 import edu.wpi.first.util.datalog.DataLog;
 import frc.lib.logging.LogConstants;
-import frc.lib.logging.DataReceiver;
+import frc.lib.logging.CycleReceiver;
 import frc.lib.logging.LoggableType;
 
-public class WPILOGWriter implements DataReceiver {
+public class WPILOGWriter implements CycleReceiver {
+    public static final String key = "WPILOG";
     private final Map<String, Integer> entriesIds = new HashMap<>();
     private final DataLog log;
-
+    
     public WPILOGWriter(String directory) {
         log = new DataLog(directory);
     }
@@ -77,4 +78,8 @@ public class WPILOGWriter implements DataReceiver {
         log.appendStringArray(getOrCreateEntryId(key, LoggableType.STRING_ARRAY, timestamp), value, timestamp);
     }
 
+    @Override
+    public String getKey() {
+        return key;
+    }
 }

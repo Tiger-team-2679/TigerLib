@@ -9,9 +9,10 @@ import frc.lib.logging.wpilog.WPILOGReader;
 public class Logger {
     private static ReplaySource replaySource = null;
     private static final LogTable logTable = new LogTable();
-    private static final DataReceiverManager dataReceiversManager = new DataReceiverManager();
+    private static final CycleReceiversManager cycleReceiversManager = new CycleReceiversManager();
 
-    private Logger() {}
+    private Logger() {
+    }
 
     public static void setReplayLog(String filename) {
         try {
@@ -25,20 +26,22 @@ public class Logger {
         Logger.replaySource = replaySource;
     }
 
-    public static void addReceiver(DataReceiver dataReceiver) {
-        dataReceiversManager.addReceiver(dataReceiver);
+    public static void addCycleReceiver(CycleReceiver dataReceiver, CycleReceiverOptions defaultOptions) {
+        cycleReceiversManager.registerCycleReceiver(dataReceiver, defaultOptions);
     }
 
     public static void beforePeriodic() {
         if (replaySource != null) {
-            boolean isSuccess = replaySource.updateTableToNextCycle(logTable);
+            boolean isSuccess = replaySource.updateTableToNextCycle(
+                    logTable,
+                    RealFieldsManager::getFieldCycleReceiversOptions);
             if (!isSuccess)
                 System.exit(0);
         } else {
-            RealDataManager.updateTableToNextCycle(logTable);
+            RealFieldsManager.updateTableToNextCycle(logTable);
         }
 
-        RealDataManager.updateFieldsFromTable(logTable);
+        RealFieldsManager.updateFieldsFromTable(logTable);
     }
 
     public static void putLogValue(String key, LogValue value) {
@@ -46,6 +49,6 @@ public class Logger {
     }
 
     public static void afterPeriodic() {
-        dataReceiversManager.putTable(logTable.clone());
+        cycleReceiversManager.putTable(logTable.clone());
     }
 }
