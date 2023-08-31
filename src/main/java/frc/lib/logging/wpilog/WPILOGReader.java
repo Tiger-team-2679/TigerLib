@@ -130,7 +130,9 @@ public class WPILOGReader implements ReplaySource {
         }
     }
 
-    private void updateField(LogTable logTable, DataLogRecord record,
+    private void updateField(
+            LogTable logTable,
+            DataLogRecord record,
             Function<String, CycleReceiverOptions[]> cycleReceiversOptionsGetter) {
         try {
             StartRecordData startData = entriesStartData.get(record.getEntry());

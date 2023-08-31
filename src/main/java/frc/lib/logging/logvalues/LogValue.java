@@ -13,7 +13,7 @@ public abstract class LogValue {
         this.cycleReceiversOptions = cycleReceiversOptions;
     }
 
-    public CycleReceiverOptions[] getOptions() {
+    public CycleReceiverOptions[] getCycleReceiversOptions() {
         return cycleReceiversOptions;
     }
 

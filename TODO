@@ -1,1 +1,1 @@
-- add validation that entries were created by the library, using metadata and timestamp.
+- add seperation of realOutput and replayOutput in logs.

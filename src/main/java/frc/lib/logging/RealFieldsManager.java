@@ -4,6 +4,7 @@ import java.rmi.UnexpectedException;
 import java.util.HashMap;
 import java.util.Map;
 
+import edu.wpi.first.wpilibj.RobotController;
 import frc.lib.logging.api.fields.DataField;
 import frc.lib.logging.logvalues.LogValue;
 
@@ -11,6 +12,7 @@ public class RealFieldsManager {
     private static final Map<String, DataField> dataFields = new HashMap<>();
 
     public static void updateTableToNextCycle(LogTable table) {
+        table.setTimestamp(RobotController.getFPGATime());
         dataFields.forEach((key, realDataField) -> {
             table.put(key, realDataField.getLogValue());
         });
@@ -39,6 +41,7 @@ public class RealFieldsManager {
     }
 
     public static CycleReceiverOptions[] getFieldCycleReceiversOptions(String key) {
-        return dataFields.get(key).getCycleReceiversOptions();
+        DataField dataField = dataFields.get(key);
+        return dataField == null ? new CycleReceiverOptions[]{} : dataField.getCycleReceiversOptions();
     }
 }

@@ -26,8 +26,9 @@ public class CycleReceiversManager {
                     logTable.getTimestamp());
 
             logTable.getAll().forEach((key, logValue) -> {
-                CycleReceiverOptions options = getCycleReceiverOptions(cycleReceiver,
-                        logValue.getOptions(),
+                CycleReceiverOptions options = getCycleReceiverOptions(
+                        cycleReceiver,
+                        logValue.getCycleReceiversOptions(),
                         defaultOptions);
 
                 if (options.getIfEnabled() && (prevLogTable == null || !logValue.equals(prevLogTable.get(key))))

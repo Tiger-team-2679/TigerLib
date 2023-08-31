@@ -17,6 +17,6 @@ public class ExampleSubsystem extends SubsystemBase {
     public void periodic() {
         System.out.println(io.someValue.getAsLong());
 
-        fieldsTable.recordValue("multiplied", io.someValue.getAsLong() * 2, new NT4Options(true));
+        fieldsTable.recordValue("multiplieded", io.someValue.getAsLong() * 2, new NT4Options(true));
     }
 }
