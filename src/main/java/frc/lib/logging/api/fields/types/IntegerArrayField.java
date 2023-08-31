@@ -22,7 +22,7 @@ public class IntegerArrayField extends DataField implements Supplier<long[]> {
     }
 
     @Override
-    public void putIntegerArray(String key, long[] value, long timestamp) {
+    public void putIntegerArray(String key, long[] value, long timestamp, Object options) {
         this.value = value;
     }
 

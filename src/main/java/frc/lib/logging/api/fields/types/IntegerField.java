@@ -22,7 +22,7 @@ public class IntegerField extends DataField implements LongSupplier {
     }
 
     @Override
-    public void putInteger(String key, long value, long timestamp) {
+    public void putInteger(String key, long value, long timestamp, Object options) {
         this.value = value;
     }
 

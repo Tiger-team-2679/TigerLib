@@ -14,8 +14,8 @@ public class DoubleLogValue extends LogValue {
     }
 
     @Override
-    public void putInDataReceiver(DataReceiver writer, String key, long timestamp) {
-        writer.putDouble(key, value, timestamp);
+    public void putInDataReceiver(DataReceiver writer, String key, long timestamp, Object options) {
+        writer.putDouble(key, value, timestamp, options);
     }
 
     @Override

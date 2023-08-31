@@ -24,7 +24,7 @@ public class RealFieldsManager {
                 LogValue logValue = table.get(key);
                 if(logValue == null)
                     throw new UnexpectedException("the value for field " + key + " was not provided.");
-                logValue.putInDataReceiver(realDataField, key, table.getTimestamp());    
+                logValue.putInDataReceiver(realDataField, key, table.getTimestamp(), null);    
             } catch(UnexpectedException e){
                 e.printStackTrace();
             }

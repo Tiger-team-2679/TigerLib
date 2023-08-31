@@ -22,7 +22,7 @@ public class StringField extends DataField implements Supplier<String> {
     }
 
     @Override
-    public void putString(String key, String value, long timestamp) {
+    public void putString(String key, String value, long timestamp, Object options) {
         this.value = value;
     }
 

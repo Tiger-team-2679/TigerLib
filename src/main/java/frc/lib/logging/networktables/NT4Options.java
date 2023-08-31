@@ -6,7 +6,7 @@ import frc.lib.logging.CycleReceiverOptions;
 
 public class NT4Options extends CycleReceiverOptions {
     public NT4Options(BooleanSupplier enableSupplier) {
-        super(NT4Publisher.key, enableSupplier);
+        super(enableSupplier);
     }
 
     public NT4Options(boolean enabled) {

@@ -21,7 +21,7 @@ public class FloatField extends DataField implements FloatSupplier {
     }
 
     @Override
-    public void putFloat(String key, float value, long timestamp) {
+    public void putFloat(String key, float value, long timestamp, Object options) {
         this.value = value;
     }
 

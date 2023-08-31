@@ -13,17 +13,18 @@ public class CycleReceiversManager {
      * Put table in all data receivers.
      * 
      * @param cycleReceiver the table to put, each call should be a refrence to a
-     *                      new
-     *                      instence.
+     *                      new instence.
      */
     public void putTable(LogTable logTable) {
         for (Pair<CycleReceiver, CycleReceiverOptions> cycleReceiverPair : cycleReceiverPairs) {
             CycleReceiver cycleReceiver = cycleReceiverPair.getFirst();
             CycleReceiverOptions defaultOptions = cycleReceiverPair.getSecond();
+
             cycleReceiver.putInteger(
                     LogConstants.CYCLE_TIMESTAMP_KEY,
                     logTable.getTimestamp(),
-                    logTable.getTimestamp());
+                    logTable.getTimestamp(),
+                    defaultOptions);
 
             logTable.getAll().forEach((key, logValue) -> {
                 CycleReceiverOptions options = getCycleReceiverOptions(
@@ -32,7 +33,7 @@ public class CycleReceiversManager {
                         defaultOptions);
 
                 if (options.getIfEnabled() && (prevLogTable == null || !logValue.equals(prevLogTable.get(key))))
-                    logValue.putInDataReceiver(cycleReceiver, key, logTable.getTimestamp());
+                    logValue.putInDataReceiver(cycleReceiver, key, logTable.getTimestamp(), options);
             });
         }
 
@@ -44,13 +45,16 @@ public class CycleReceiversManager {
             CycleReceiverOptions[] cycleReceiversOptions,
             CycleReceiverOptions defaultOptions) {
         for (CycleReceiverOptions options : cycleReceiversOptions) {
-            if (options.getKey() == cycleReceiver.getKey())
+            if (cycleReceiver.isOptionsForThisCycleReceiver(options))
                 return options;
         }
         return defaultOptions;
     }
 
     public void registerCycleReceiver(CycleReceiver cycleReceiver, CycleReceiverOptions defaultOptions) {
+        if (!cycleReceiver.isOptionsForThisCycleReceiver(defaultOptions))
+            throw new IllegalArgumentException("cycle receiver " + cycleReceiver.getClass().getSimpleName()
+                    + " cannot have default options of type " + defaultOptions.getClass().getSimpleName() + ".");
         cycleReceiverPairs.add(new Pair<>(cycleReceiver, defaultOptions));
     }
 }

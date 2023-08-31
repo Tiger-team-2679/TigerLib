@@ -22,7 +22,7 @@ public class StringArrayField extends DataField implements Supplier<String[]> {
     }
 
     @Override
-    public void putStringArray(String key, String[] value, long timestamp) {
+    public void putStringArray(String key, String[] value, long timestamp, Object options) {
         this.value = value;
     }
 

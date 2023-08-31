@@ -22,7 +22,7 @@ public class BooleanArrayField extends DataField implements Supplier<boolean[]> 
     }
 
     @Override
-    public void putBooleanArray(String key, boolean[] value, long timestamp) {
+    public void putBooleanArray(String key, boolean[] value, long timestamp, Object options) {
         this.value = value;
     }
 

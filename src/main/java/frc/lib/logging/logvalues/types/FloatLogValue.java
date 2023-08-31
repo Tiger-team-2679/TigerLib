@@ -14,8 +14,8 @@ public class FloatLogValue extends LogValue {
     }
 
     @Override
-    public void putInDataReceiver(DataReceiver writer, String key, long timestamp) {
-        writer.putFloat(key, value, timestamp);
+    public void putInDataReceiver(DataReceiver writer, String key, long timestamp, Object options) {
+        writer.putFloat(key, value, timestamp, options);
     }
     
     @Override

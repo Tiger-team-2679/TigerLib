@@ -16,8 +16,8 @@ public class DoubleArrayLogValue extends LogValue {
     }
 
     @Override
-    public void putInDataReceiver(DataReceiver writer, String key, long timestamp) {
-        writer.putDoubleArray(key, value, timestamp);
+    public void putInDataReceiver(DataReceiver writer, String key, long timestamp, Object options) {
+        writer.putDoubleArray(key, value, timestamp, options);
     }
 
     @Override

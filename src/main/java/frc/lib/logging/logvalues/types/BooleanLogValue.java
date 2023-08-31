@@ -14,8 +14,8 @@ public class BooleanLogValue extends LogValue {
     }
 
     @Override
-    public void putInDataReceiver(DataReceiver writer, String key, long timestamp) {
-        writer.putBoolean(key, value, timestamp);
+    public void putInDataReceiver(DataReceiver writer, String key, long timestamp, Object options) {
+        writer.putBoolean(key, value, timestamp, options);
     }
 
     @Override

@@ -22,7 +22,7 @@ public class RawField extends DataField implements Supplier<byte[]> {
     }
 
     @Override
-    public void putRaw(String key, byte[] value, long timestamp) {
+    public void putRaw(String key, byte[] value, long timestamp, Object options) {
         this.value = value;
     }
 

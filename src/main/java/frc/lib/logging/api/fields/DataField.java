@@ -20,67 +20,67 @@ public abstract class DataField implements DataReceiver {
     public abstract LogValue getLogValue();
 
     @Override
-    public void putRaw(String key, byte[] value, long timestamp) {
+    public void putRaw(String key, byte[] value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
             "You cannot put raw to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putBoolean(String key, boolean value, long timestamp) {
+    public void putBoolean(String key, boolean value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put boolean to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putInteger(String key, long value, long timestamp) {
+    public void putInteger(String key, long value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put integer to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putFloat(String key, float value, long timestamp) {
+    public void putFloat(String key, float value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put float to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putDouble(String key, double value, long timestamp) {
+    public void putDouble(String key, double value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put double to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putString(String key, String value, long timestamp) {
+    public void putString(String key, String value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put string to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putBooleanArray(String key, boolean[] value, long timestamp) {
+    public void putBooleanArray(String key, boolean[] value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put boolean array to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putIntegerArray(String key, long[] value, long timestamp) {
+    public void putIntegerArray(String key, long[] value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put integer array to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putFloatArray(String key, float[] value, long timestamp) {
+    public void putFloatArray(String key, float[] value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put float array to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putDoubleArray(String key, double[] value, long timestamp) {
+    public void putDoubleArray(String key, double[] value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put double array to field '" + key + "' (timestamp: " + timestamp + ").");
     }
 
     @Override
-    public void putStringArray(String key, String[] value, long timestamp) {
+    public void putStringArray(String key, String[] value, long timestamp, Object options) {
         throw new UnsupportedOperationException(
                 "You cannot put string array to field '" + key + "' (timestamp: " + timestamp + ").");
     }

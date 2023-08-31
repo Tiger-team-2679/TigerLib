@@ -67,46 +67,46 @@ public class FieldsTable {
     }
 
     public void recordValue(String name, byte[] value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new RawLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new RawLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, boolean value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new BooleanLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new BooleanLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, long value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new IntegerLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new IntegerLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, float value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new FloatLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new FloatLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, double value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new DoubleLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new DoubleLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, String value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new StringLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new StringLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, boolean[] value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new BooleanArrayLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new BooleanArrayLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, long[] value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new IntegerArrayLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new IntegerArrayLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, float[] value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new FloatArrayLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new FloatArrayLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, double[] value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new DoubleArrayLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new DoubleArrayLogValue(value, cycleReceiversOptions));
     }
 
     public void recordValue(String name, String[] value, CycleReceiverOptions ...cycleReceiversOptions) {
-        Logger.putLogValue(prefix + name, new StringArrayLogValue(value, cycleReceiversOptions));
+        Logger.recordValue(prefix + name, new StringArrayLogValue(value, cycleReceiversOptions));
     }
 }

@@ -1,5 +1,5 @@
 package frc.lib.logging;
 
 public interface CycleReceiver extends DataReceiver {
-    public String getKey();
+    public boolean isOptionsForThisCycleReceiver(CycleReceiverOptions options);
 }

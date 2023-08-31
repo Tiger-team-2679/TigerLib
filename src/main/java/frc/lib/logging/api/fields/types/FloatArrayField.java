@@ -22,7 +22,7 @@ public class FloatArrayField extends DataField implements Supplier<float[]> {
     }
 
     @Override
-    public void putFloatArray(String key, float[] value, long timestamp) {
+    public void putFloatArray(String key, float[] value, long timestamp, Object options) {
         this.value = value;
     }
 

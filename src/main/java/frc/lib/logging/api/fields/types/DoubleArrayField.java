@@ -22,7 +22,7 @@ public class DoubleArrayField extends DataField implements Supplier<double[]> {
     }
 
     @Override
-    public void putDoubleArray(String key, double[] value, long timestamp) {
+    public void putDoubleArray(String key, double[] value, long timestamp, Object options) {
         this.value = value;
     }
 

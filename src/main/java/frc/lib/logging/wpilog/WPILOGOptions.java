@@ -6,7 +6,7 @@ import frc.lib.logging.CycleReceiverOptions;
 
 public class WPILOGOptions extends CycleReceiverOptions {
     public WPILOGOptions(BooleanSupplier enableSupplier) {
-        super(WPILOGWriter.key, enableSupplier);
+        super(enableSupplier);
     }
 
     public WPILOGOptions(boolean enabled) {

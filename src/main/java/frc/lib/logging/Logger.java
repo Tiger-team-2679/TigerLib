@@ -44,8 +44,9 @@ public class Logger {
         RealFieldsManager.updateFieldsFromTable(logTable);
     }
 
-    public static void putLogValue(String key, LogValue value) {
-        logTable.put(key, value);
+    public static void recordValue(String key, LogValue value) {
+        String prefix = replaySource == null ? "realOutputs/" : "replayOutputs/";
+        logTable.put(prefix + key, value);
     }
 
     public static void afterPeriodic() {

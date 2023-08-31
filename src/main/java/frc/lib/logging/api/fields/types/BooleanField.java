@@ -22,7 +22,7 @@ public class BooleanField extends DataField implements BooleanSupplier {
     }
 
     @Override
-    public void putBoolean(String key, boolean value, long timestamp) {
+    public void putBoolean(String key, boolean value, long timestamp, Object options) {
         this.value = value;
     }
 

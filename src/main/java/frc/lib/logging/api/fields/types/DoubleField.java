@@ -22,7 +22,7 @@ public class DoubleField extends DataField implements DoubleSupplier {
     }
 
     @Override
-    public void putDouble(String key, double value, long timestamp) {
+    public void putDouble(String key, double value, long timestamp, Object options) {
         this.value = value;
     }
 
