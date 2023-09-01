@@ -2,26 +2,25 @@ package frc.lib.logging;
 
 import java.io.IOException;
 
+import edu.wpi.first.hal.HAL;
+import edu.wpi.first.hal.FRCNetComm.tInstances;
+import edu.wpi.first.hal.FRCNetComm.tResourceType;
+import edu.wpi.first.math.MathShared;
+import edu.wpi.first.math.MathSharedStore;
+import edu.wpi.first.math.MathUsageId;
 import edu.wpi.first.wpilibj.DriverStation;
-import edu.wpi.first.wpilibj.RobotController;
-import frc.lib.logging.logvalues.types.BooleanLogValue;
-import frc.lib.logging.logvalues.types.IntegerLogValue;
-import frc.lib.logging.networktables.NT4Publisher;
+import frc.lib.logging.logvalues.LogValue;
 import frc.lib.logging.wpilog.WPILOGReader;
-import frc.lib.logging.wpilog.WPILOGWriter;
 
 public class Logger {
-    private ReplaySource wpilogReader = null;
-    private final LogTable logTable = new LogTable();
-    private final DataReceiverManager dataReceiversManager = new DataReceiverManager();
-    private long counter = 0;
+    private static ReplaySource replaySource = null;
+    private static final LogTable logTable = new LogTable();
+    private static final CycleReceiversManager cycleReceiversManager = new CycleReceiversManager();
 
-    public Logger(String logFolder) {
-        dataReceiversManager.addReceiver(new WPILOGWriter(logFolder));
-        dataReceiversManager.addReceiver(new NT4Publisher());
+    private Logger() {
     }
 
-    public void setReplayLog(String filename) {
+    public static void setReplayLog(String filename) {
         try {
             setReplayLog(new WPILOGReader(filename));
         } catch (IOException e) {
@@ -29,22 +28,108 @@ public class Logger {
         }
     }
 
-    public void setReplayLog(ReplaySource replaySource) {
-        wpilogReader = replaySource;
+    public static void setReplayLog(ReplaySource replaySource) {
+        Logger.replaySource = replaySource;
     }
 
-    public void periodic() {
-        if (wpilogReader != null) {
-            boolean isSuccess = wpilogReader.updateTableToNextCycle(logTable);
+    public static void addCycleReceiver(CycleReceiver dataReceiver, CycleReceiverOptions defaultOptions) {
+        cycleReceiversManager.registerCycleReceiver(dataReceiver, defaultOptions, defaultOptions);
+    }
+
+    public static void addCycleReceiver(CycleReceiver dataReceiver, CycleReceiverOptions defaultOptions,
+            CycleReceiverOptions cycleTimestampOptions) {
+        cycleReceiversManager.registerCycleReceiver(dataReceiver, defaultOptions, cycleTimestampOptions);
+    }
+
+    public static void onStart(){
+        setMathShared();
+    }
+
+    public static void beforePeriodic() {
+        if (replaySource != null) {
+            boolean isSuccess = replaySource.updateTableToNextCycle(
+                    logTable,
+                    RealFieldsManager::getFieldCycleReceiversOptions);
             if (!isSuccess)
                 System.exit(0);
         } else {
-            logTable.setTimestamp(RobotController.getFPGATime());
-            logTable.put("hey", new IntegerLogValue(++counter));
-            logTable.put("boool", new BooleanLogValue(counter % 2 == 0));
-            logTable.put("boool2", new BooleanLogValue(counter % 4 == 0));
+            RealFieldsManager.updateTableToNextCycle(logTable);
         }
 
-        dataReceiversManager.putTable(logTable.clone());
+        RealFieldsManager.updateFieldsFromTable(logTable);
+    }
+
+    public static void afterPeriodic() {
+        cycleReceiversManager.putTable(logTable.clone());
+    }
+
+    public static long getTimestamp() {
+        return logTable.getTimestamp();
+    }
+
+    public static void recordValue(String key, LogValue value) {
+        String prefix = replaySource == null ? "realOutputs/" : "replayOutputs/";
+        logTable.put(prefix + key, value);
+    }
+
+    /**
+     * Updates the MathShared object for wpimath to the Logger timestamps.
+     */
+    private static void setMathShared() {
+        MathSharedStore.setMathShared(
+                new MathShared() {
+                    @Override
+                    public void reportError(String error, StackTraceElement[] stackTrace) {
+                        DriverStation.reportError(error, stackTrace);
+                    }
+
+                    @Override
+                    public void reportUsage(MathUsageId id, int count) {
+                        switch (id) {
+                            case kKinematics_DifferentialDrive:
+                                HAL.report(
+                                        tResourceType.kResourceType_Kinematics,
+                                        tInstances.kKinematics_DifferentialDrive);
+                                break;
+                            case kKinematics_MecanumDrive:
+                                HAL.report(
+                                        tResourceType.kResourceType_Kinematics, tInstances.kKinematics_MecanumDrive);
+                                break;
+                            case kKinematics_SwerveDrive:
+                                HAL.report(
+                                        tResourceType.kResourceType_Kinematics, tInstances.kKinematics_SwerveDrive);
+                                break;
+                            case kTrajectory_TrapezoidProfile:
+                                HAL.report(tResourceType.kResourceType_TrapezoidProfile, count);
+                                break;
+                            case kFilter_Linear:
+                                HAL.report(tResourceType.kResourceType_LinearFilter, count);
+                                break;
+                            case kOdometry_DifferentialDrive:
+                                HAL.report(
+                                        tResourceType.kResourceType_Odometry, tInstances.kOdometry_DifferentialDrive);
+                                break;
+                            case kOdometry_SwerveDrive:
+                                HAL.report(tResourceType.kResourceType_Odometry, tInstances.kOdometry_SwerveDrive);
+                                break;
+                            case kOdometry_MecanumDrive:
+                                HAL.report(tResourceType.kResourceType_Odometry, tInstances.kOdometry_MecanumDrive);
+                                break;
+                            case kController_PIDController2:
+                                HAL.report(tResourceType.kResourceType_PIDController2, count);
+                                break;
+                            case kController_ProfiledPIDController:
+                                HAL.report(tResourceType.kResourceType_ProfiledPIDController, count);
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public double getTimestamp() {
+                        return Logger.getTimestamp();
+                    }
+                });
     }
 }

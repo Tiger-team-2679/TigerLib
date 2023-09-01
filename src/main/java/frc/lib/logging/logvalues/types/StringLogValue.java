@@ -1,5 +1,6 @@
 package frc.lib.logging.logvalues.types;
 
+import frc.lib.logging.CycleReceiverOptions;
 import frc.lib.logging.DataReceiver;
 import frc.lib.logging.LoggableType;
 import frc.lib.logging.logvalues.LogValue;
@@ -7,14 +8,14 @@ import frc.lib.logging.logvalues.LogValue;
 public class StringLogValue extends LogValue {
     private final String value;
 
-    public StringLogValue(String value) {
-        super(LoggableType.STRING);
+    public StringLogValue(String value, CycleReceiverOptions[] cycleReceiversOptions) {
+        super(LoggableType.STRING, cycleReceiversOptions);
         this.value = value;
     }
 
     @Override
-    public void log(DataReceiver writer, String key, long timestamp) {
-        writer.putString(key, value, timestamp);
+    public void putInDataReceiver(DataReceiver writer, String key, long timestamp, Object options) {
+        writer.putString(key, value, timestamp, options);
     }
 
     @Override

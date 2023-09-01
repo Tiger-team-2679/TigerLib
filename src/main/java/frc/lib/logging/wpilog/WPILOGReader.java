@@ -10,6 +10,8 @@ import edu.wpi.first.util.datalog.DataLogIterator;
 import edu.wpi.first.util.datalog.DataLogReader;
 import edu.wpi.first.util.datalog.DataLogRecord;
 import edu.wpi.first.util.datalog.DataLogRecord.StartRecordData;
+import frc.lib.logging.CycleReceiverOptions;
+import frc.lib.logging.LogConstants;
 import frc.lib.logging.LogTable;
 import frc.lib.logging.LoggableType;
 import frc.lib.logging.ReplaySource;
@@ -28,10 +30,10 @@ public class WPILOGReader implements ReplaySource {
         iterator = logReader.iterator();
 
         DataLogRecord timestampEntryStartRecord = iterateOnLogUntil(
-                record -> record.isStart() && record.getStartData().name.equals(WPILOGConstants.CYCLE_TIMESTAMP_KEY)
-                        && record.getStartData().metadata.equals(WPILOGConstants.ENTRY_METADATA));
+                record -> record.isStart() && record.getStartData().name.equals(LogConstants.CYCLE_TIMESTAMP_KEY)
+                        && record.getStartData().metadata.equals(LogConstants.ENTRY_METADATA));
         if (timestampEntryStartRecord == null)
-            throw new IOException("Log file doesn't have valid " + WPILOGConstants.CYCLE_TIMESTAMP_KEY + " entry.");
+            throw new IOException("Log file doesn't have valid " + LogConstants.CYCLE_TIMESTAMP_KEY + " entry.");
         timestampEntryId = timestampEntryStartRecord.getStartData().entry;
 
         DataLogRecord firstTimestampRecord = iterateOnLogUntil(record -> record.getEntry() == timestampEntryId);
@@ -65,9 +67,11 @@ public class WPILOGReader implements ReplaySource {
      * considered between two cycle timestamp records.
      * 
      * @param table the log table to be updated.
-     * @return wheter could update the full cycle, or the log file ended.
+     * @return wheter could update the full cycle (or the log file ended).
      */
-    public boolean updateTableToNextCycle(LogTable table) {
+    public boolean updateTableToNextCycle(
+            LogTable table,
+            Function<String, CycleReceiverOptions[]> cycleReceiversOptionsGetter) {
         table.setTimestamp(nextCycleTimestamp);
 
         DataLogRecord nextCycleTimestampRecord = iterateOnLogUntil(record -> {
@@ -76,7 +80,7 @@ public class WPILOGReader implements ReplaySource {
             } else if (record.getEntry() == timestampEntryId) {
                 return true;
             } else if (record.getTimestamp() == table.getTimestamp()) {
-                updateField(table, record);
+                updateField(table, record, cycleReceiversOptionsGetter);
             }
             return false;
         });
@@ -90,41 +94,46 @@ public class WPILOGReader implements ReplaySource {
     private void handleControlRecord(DataLogRecord record) {
         if (record.isStart()) { // other types of control records doesn't metter.
             StartRecordData startData = record.getStartData();
-            if (startData.metadata.contains("\"source\": \"TigerKit\""))
+            if (startData.metadata.equals(LogConstants.ENTRY_METADATA))
                 entriesStartData.put(startData.entry, startData);
         }
     }
 
-    private LogValue createLogValue(DataLogRecord record, LoggableType type) {
+    private LogValue createLogValue(DataLogRecord record, LoggableType type,
+            CycleReceiverOptions[] cycleReceiversOptions)
+            throws UnexpectedException {
         switch (type) {
             case RAW:
-                return new RawLogValue(record.getRaw());
+                return new RawLogValue(record.getRaw(), cycleReceiversOptions);
             case BOOLEAN:
-                return new BooleanLogValue(record.getBoolean());
+                return new BooleanLogValue(record.getBoolean(), cycleReceiversOptions);
             case INTEGER:
-                return new IntegerLogValue(record.getInteger());
+                return new IntegerLogValue(record.getInteger(), cycleReceiversOptions);
             case FLOAT:
-                return new FloatLogValue(record.getFloat());
+                return new FloatLogValue(record.getFloat(), cycleReceiversOptions);
             case DOUBLE:
-                return new DoubleLogValue(record.getDouble());
+                return new DoubleLogValue(record.getDouble(), cycleReceiversOptions);
             case STRING:
-                return new StringLogValue(record.getString());
+                return new StringLogValue(record.getString(), cycleReceiversOptions);
             case BOOLEAN_ARRAY:
-                return new BooleanArrayLogValue(record.getBooleanArray());
+                return new BooleanArrayLogValue(record.getBooleanArray(), cycleReceiversOptions);
             case INTEGER_ARRAY:
-                return new IntegerArrayLogValue(record.getIntegerArray());
+                return new IntegerArrayLogValue(record.getIntegerArray(), cycleReceiversOptions);
             case FLOAT_ARRAY:
-                return new FloatArrayLogValue(record.getFloatArray());
+                return new FloatArrayLogValue(record.getFloatArray(), cycleReceiversOptions);
             case DOUBLE_ARRAY:
-                return new DoubleArrayLogValue(record.getDoubleArray());
+                return new DoubleArrayLogValue(record.getDoubleArray(), cycleReceiversOptions);
             case STRING_ARRAY:
-                return new StringArrayLogValue(record.getStringArray());
+                return new StringArrayLogValue(record.getStringArray(), cycleReceiversOptions);
             default:
-                return null;
+                throw new UnexpectedException("Did not create LogValue.");
         }
     }
 
-    private void updateField(LogTable logTable, DataLogRecord record) {
+    private void updateField(
+            LogTable logTable,
+            DataLogRecord record,
+            Function<String, CycleReceiverOptions[]> cycleReceiversOptionsGetter) {
         try {
             StartRecordData startData = entriesStartData.get(record.getEntry());
 
@@ -132,11 +141,14 @@ public class WPILOGReader implements ReplaySource {
                 return; // does not throw because could be caused by record that wasn't written by
                         // TigerLib.
 
-            LogValue logValue = createLogValue(record, LoggableType.fromWPILOGType(startData.type));
-            if (logValue == null)
-                throw new UnexpectedException("Did not create LogValue.");
+            String key = startData.name;
 
-            logTable.put(startData.name, logValue);
+            LogValue logValue = createLogValue(
+                    record,
+                    LoggableType.fromWPILOGType(startData.type),
+                    cycleReceiversOptionsGetter.apply(key));
+
+            logTable.put(key, logValue);
         } catch (UnexpectedException e) {
             e.printStackTrace();
         } catch (IllegalArgumentException e) {
