@@ -1,1 +1,2 @@
 - enable setting cycle receivers options for the cycle timestamp.
+- adding shouldIgnoreDuplicates to the cycle receivers options.

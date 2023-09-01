@@ -3,10 +3,8 @@ package frc.lib.logging;
 import java.util.ArrayList;
 import java.util.List;
 
-import edu.wpi.first.math.Pair;
-
 public class CycleReceiversManager {
-    private final List<Pair<CycleReceiver, CycleReceiverOptions>> cycleReceiverPairs = new ArrayList<>();
+    private final List<CycleReceiverWithOptions> cycleReceiverPairs = new ArrayList<>();
     private LogTable prevLogTable = null;
 
     /**
@@ -16,15 +14,17 @@ public class CycleReceiversManager {
      *                      new instence.
      */
     public void putTable(LogTable logTable) {
-        for (Pair<CycleReceiver, CycleReceiverOptions> cycleReceiverPair : cycleReceiverPairs) {
-            CycleReceiver cycleReceiver = cycleReceiverPair.getFirst();
-            CycleReceiverOptions defaultOptions = cycleReceiverPair.getSecond();
+        for (CycleReceiverWithOptions cycleReceiverWithOptions : cycleReceiverPairs) {
+            CycleReceiver cycleReceiver = cycleReceiverWithOptions.getCycleReceiver();
+            CycleReceiverOptions defaultOptions = cycleReceiverWithOptions.getDefaultOptions();
+            CycleReceiverOptions cycleTimestampOptions = cycleReceiverWithOptions.getCycleTimestampOptions();
 
-            cycleReceiver.putInteger(
-                    LogConstants.CYCLE_TIMESTAMP_KEY,
-                    logTable.getTimestamp(),
-                    logTable.getTimestamp(),
-                    defaultOptions);
+            if (cycleTimestampOptions.getIfEnabled())
+                cycleReceiver.putInteger(
+                        LogConstants.CYCLE_TIMESTAMP_KEY,
+                        logTable.getTimestamp(),
+                        logTable.getTimestamp(),
+                        cycleTimestampOptions);
 
             logTable.getAll().forEach((key, logValue) -> {
                 CycleReceiverOptions options = getCycleReceiverOptions(
@@ -51,10 +51,47 @@ public class CycleReceiversManager {
         return defaultOptions;
     }
 
-    public void registerCycleReceiver(CycleReceiver cycleReceiver, CycleReceiverOptions defaultOptions) {
+    public void registerCycleReceiver(
+            CycleReceiver cycleReceiver,
+            CycleReceiverOptions defaultOptions,
+            CycleReceiverOptions cycleTimestampOptions) {
         if (!cycleReceiver.isOptionsForThisCycleReceiver(defaultOptions))
             throw new IllegalArgumentException("cycle receiver " + cycleReceiver.getClass().getSimpleName()
                     + " cannot have default options of type " + defaultOptions.getClass().getSimpleName() + ".");
-        cycleReceiverPairs.add(new Pair<>(cycleReceiver, defaultOptions));
+
+        if (!cycleReceiver.isOptionsForThisCycleReceiver(cycleTimestampOptions))
+            throw new IllegalArgumentException("cycle receiver " + cycleReceiver.getClass().getSimpleName()
+                    + " cannot have cycle timestamp options of type " + cycleTimestampOptions.getClass().getSimpleName()
+                    + ".");
+
+        cycleReceiverPairs.add(
+                new CycleReceiverWithOptions(cycleReceiver, defaultOptions, cycleTimestampOptions));
+    }
+
+    private static class CycleReceiverWithOptions {
+        private final CycleReceiver cycleReceiver;
+        private final CycleReceiverOptions defaultOptions;
+        private final CycleReceiverOptions cycleTimestampOptions;
+
+        public CycleReceiverWithOptions(
+                CycleReceiver cycleReceiver,
+                CycleReceiverOptions defaultOptions,
+                CycleReceiverOptions cycleTimestampOptions) {
+            this.cycleReceiver = cycleReceiver;
+            this.defaultOptions = defaultOptions;
+            this.cycleTimestampOptions = cycleTimestampOptions;
+        }
+
+        public CycleReceiver getCycleReceiver() {
+            return cycleReceiver;
+        }
+
+        public CycleReceiverOptions getDefaultOptions() {
+            return defaultOptions;
+        }
+
+        public CycleReceiverOptions getCycleTimestampOptions() {
+            return cycleTimestampOptions;
+        }
     }
 }

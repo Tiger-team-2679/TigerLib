@@ -20,9 +20,10 @@ public class Robot extends TimedRobot {
 
     @Override
     public void robotInit() {
+        Logger.onStart();
+        Logger.addCycleReceiver(new WPILOGWriter("C:\\TigerTeam\\tmpLogs"), WPILOGOptions.ON);
+        Logger.addCycleReceiver(new NT4Publisher(), NT4Options.OFF, NT4Options.ON);
         m_robotContainer = new RobotContainer();
-        Logger.addCycleReceiver(new WPILOGWriter("C:\\TigerTeam\\tmpLogs"), new WPILOGOptions(true));
-        Logger.addCycleReceiver(new NT4Publisher(), new NT4Options(false));
         // Logger.setReplayLog("C:\\TigerTeam\\tmpLogs\\wpilog_1c890eb1c2c08a2a.wpilog");
     }
 
